@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "lib": ["es2018"],
+      "target": "es2018",
+      "module": "commonjs",
+      "outDir": "build",
+      "rootDir": ".",
+      "moduleResolution": "node",
+      "noImplicitAny": true,
+      "noUnusedLocals": true,
+      "skipLibCheck": true,
+      "esModuleInterop": true
+    },
+    "include": ["./*.ts"]
+  }
+  

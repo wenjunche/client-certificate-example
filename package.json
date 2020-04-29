@@ -1,0 +1,20 @@
+{
+  "name": "https-server",
+  "version": "1.0.0",
+  "description": "1. openssl req -x509 -days 365 -nodes -sha256 -newkey rsa:4096 -keyout server-key.pem -out server-crt.pem",
+  "main": "server.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "start": "node build/server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "@types/ws": "^7.2.4",
+    "typescript": "^3.6.2"
+  }
+}
