@@ -1,0 +1,11 @@
+dev:
+  cpu: 256
+  mem: 512
+  minimumPercentOfInstances: 100
+  maximumPercentOfInstances: 200
+  instances: 1
+  policyFile: "dev.taskrole.json"
+
+port: 8099
+healthRoute: /health
+launchType: FARGATE
