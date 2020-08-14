@@ -6,7 +6,8 @@ import * as url from "url";
 import * as path from "path";
 
 
-const PORT: number = 8443;
+const HTTPS_PORT: number = 8443;
+const HTTP_PORT: number = 8099;
 
 const options: https.ServerOptions = {
     key:  fs.readFileSync('server-key.pem'),
@@ -58,4 +59,16 @@ https.createServer(options, (req: http.IncomingMessage, res: http.ServerResponse
             });
         });
     }
-}).listen(PORT, () => console.log(`Listening ${PORT}`));
+}).listen(HTTPS_PORT, () => console.log(`Listening ${HTTPS_PORT}`));
+
+http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
+    if (req.method === 'GET') {
+        let uri = url.parse(req.url).pathname;
+        if (uri === '/health') {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.write(JSON.stringify({message: "OK"}))
+            res.end();
+            return;
+        }
+    }
+}).listen(HTTP_PORT, () => console.log(`Listening ${HTTP_PORT}`));
