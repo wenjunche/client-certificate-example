@@ -12,7 +12,7 @@ const options: https.ServerOptions = {
     key:  fs.readFileSync('server-key.pem'),
     cert: fs.readFileSync('server-crt.pem'),
     requestCert: true,
-    rejectUnauthorized: true,
+    rejectUnauthorized: false,
     ca: [ fs.readFileSync('client-crt.pem'), fs.readFileSync('client-crt2.pem') ]
 };
 
@@ -22,9 +22,15 @@ https.createServer(options, (req: http.IncomingMessage, res: http.ServerResponse
     console.log(JSON.stringify(cert.subject));
 
     if (req.method === 'GET') {
+
         let uri = url.parse(req.url).pathname,
             filename = path.join(process.cwd(), uri);
-
+        if (uri === '/health') {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.write(JSON.stringify({message: "OK"}))
+            res.end();
+            return;
+        }
         fs.exists(filename, function(exists) {
             if(!exists) {
                 res.writeHead(404, { "Content-Type": "text/plain" });
