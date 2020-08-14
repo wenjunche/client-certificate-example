@@ -11,7 +11,7 @@ FROM base as runner
 WORKDIR /app
 COPY --from=builder /app /app
 ENV NODE_DEBUG debug
-ENV APP_NAME client-certifiate-test
+ENV APP_NAME client-certificate-test
 ENV AWS_REGION us-east-1
 ARG GIT_SHORT_SHA
 ENV GIT_SHORT_SHA=$GIT_SHORT_SHA
