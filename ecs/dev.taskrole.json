@@ -5,7 +5,7 @@
         "Sid": "VisualEditor4",
         "Effect": "Allow",
         "Action": "secretsmanager:GetSecretValue",
-        "Resource": "arn:aws:secretsmanager:us-east-1:041175032282:secret:client-certificate-test-secrets-dev*"
+        "Resource": "arn:aws:secretsmanager:us-east-1:041175032282:secret:client-cert-test-secrets-dev*"
       }
     ]
   }
