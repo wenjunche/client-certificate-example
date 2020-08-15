@@ -22,6 +22,7 @@ prod:
   instances: 1
   policyFile: "dev.taskrole.json"
 
-port: 8099
-healthRoute: /health
+port: 8443
+protocol: TCP
+healthPort: 8099
 launchType: FARGATE
