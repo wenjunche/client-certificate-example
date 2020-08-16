@@ -35,8 +35,23 @@ const options: https.ServerOptions = {
     ca: [ fs.readFileSync('client-crt.pem'), fs.readFileSync('client-crt2.pem') ]
 };
 
+if (process.env.SERVER_KEY) {
+    options.key = decode64(process.env.SERVER_KEY);
+    options.cert = decode64(process.env.SERVER_CRT);
+    logger.info('setting server key and cert from env');
+}
+
 https.createServer(options, app).listen(HTTPS_PORT, () => {
     logger.info(`Listening ${HTTPS_PORT}`);
-
-    logger.info(`server crt ${process.env.SERVER_CRT}`);
 });
+
+
+// function encode64(data: string): string {
+//     const buff = Buffer.from(data);
+//     return buff.toString('base64');
+// }
+
+function decode64(data: string): string {
+    const buff = Buffer.from(data, 'base64');
+    return buff.toString('ascii');    
+}
