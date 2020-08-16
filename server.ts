@@ -6,13 +6,14 @@ import * as url from "url";
 import * as path from "path";
 
 
-const PORT: number = 8443;
+const HTTPS_PORT: number = 8443;
+const HTTP_PORT: number = 8099;
 
 const options: https.ServerOptions = {
     key:  fs.readFileSync('server-key.pem'),
     cert: fs.readFileSync('server-crt.pem'),
     requestCert: true,
-    rejectUnauthorized: true,
+    rejectUnauthorized: false,
     ca: [ fs.readFileSync('client-crt.pem'), fs.readFileSync('client-crt2.pem') ]
 };
 
@@ -22,9 +23,15 @@ https.createServer(options, (req: http.IncomingMessage, res: http.ServerResponse
     console.log(JSON.stringify(cert.subject));
 
     if (req.method === 'GET') {
+
         let uri = url.parse(req.url).pathname,
             filename = path.join(process.cwd(), uri);
-
+        if (uri === '/health') {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.write(JSON.stringify({message: "OK"}))
+            res.end();
+            return;
+        }
         fs.exists(filename, function(exists) {
             if(!exists) {
                 res.writeHead(404, { "Content-Type": "text/plain" });
@@ -52,4 +59,16 @@ https.createServer(options, (req: http.IncomingMessage, res: http.ServerResponse
             });
         });
     }
-}).listen(PORT, () => console.log(`Listening ${PORT}`));
+}).listen(HTTPS_PORT, () => console.log(`Listening ${HTTPS_PORT}`));
+
+http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
+    if (req.method === 'GET') {
+        let uri = url.parse(req.url).pathname;
+        if (uri === '/health') {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.write(JSON.stringify({message: "OK"}))
+            res.end();
+            return;
+        }
+    }
+}).listen(HTTP_PORT, () => console.log(`Listening ${HTTP_PORT}`));
