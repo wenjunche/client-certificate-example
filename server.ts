@@ -14,22 +14,31 @@ const HTTPS_PORT: number = 8443;
 
 const app = express();
 app.use(...middleware);
-app.get('/health', (req, res) => {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.write(JSON.stringify({message: "OK"}))
+
+app.use('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    // @ts-ignore
+    const cert = req.socket.getPeerCertificate();
+    if (cert) {
+        logger.addFields(cert.subject).info('client certificate subject');
+    } else {
+        logger.info('missing client certificate');
+    }
+    next();
+});
+
+app.get('/app.json', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const manifest = JSON.parse(fs.readFileSync('app.json').toString());
+    if (req.query.runtimeVersion) {
+        manifest.runtime.version = req.query.runtimeVersion;
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify(manifest));
     res.end();
 });
 
-app.use("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    // @ts-ignore
-    const cert = req.socket.getPeerCertificate();
-    logger.info(JSON.stringify(cert.subject));
-    next();
-}, express.static("./"));
+app.use("/", express.static("./"));
 
 const options: https.ServerOptions = {
-    key:  fs.readFileSync('server-key.pem'),
-    cert: fs.readFileSync('server-crt.pem'),
     requestCert: true,
     rejectUnauthorized: false,
     ca: [ fs.readFileSync('client-crt.pem'), fs.readFileSync('client-crt2.pem') ]
@@ -39,13 +48,17 @@ if (process.env.SERVER_KEY) {
     options.key = decode64(process.env.SERVER_KEY);
     options.cert = decode64(process.env.SERVER_CRT);
     logger.info('setting server key and cert from env');
+} else {
+    options.key = fs.readFileSync('server-key.pem');
+    options.cert = fs.readFileSync('server-crt.pem');
+
 }
 
 https.createServer(options, app).listen(HTTPS_PORT, () => {
     logger.info(`Listening ${HTTPS_PORT}`);
 });
 
-
+// code to encode certificate
 // function encode64(data: string): string {
 //     const buff = Buffer.from(data);
 //     return buff.toString('base64');

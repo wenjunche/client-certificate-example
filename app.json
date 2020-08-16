@@ -7,7 +7,7 @@
         "saveWindowState": true
     },
     "runtime": {
-        "arguments": "--ignore-certificate-errors",
-        "version": "canary"
+        "arguments": "",
+        "version": "stable"
     }
 }
