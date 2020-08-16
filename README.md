@@ -30,3 +30,9 @@ Example of client certificates with node and OpenFin
 
 3. verify in Manage User Certificate->Personal->Certificates
 
+
+# Deploy and test in the cloud
+1. deployed as a service in ECS
+2. server chain certificate and key are read from environement variables as base64 encoded strings
+3. start RVM with https://client-cert-test-dev.openfin.co/app.json?runtimeVersion=nnn to test certficate picker in RVM and Runtime
+4. start RVM with https://of.os.openfin.co/api/app.json?runtime=beta&appurl=https://client-cert-test-dev.openfin.co/index.html to test certificate picker just for Runtime 
