@@ -1,0 +1,13 @@
+{
+    "startup_app": {
+        "name": "client-cert-test",
+        "url": "https://client-cert-test-dev.openfin.co/index.html",
+        "uuid": "client-cert-test",
+        "autoShow": true,
+        "saveWindowState": true
+    },
+    "runtime": {
+        "arguments": "--ignore-certificate-errors",
+        "version": "canary"
+    }
+}
