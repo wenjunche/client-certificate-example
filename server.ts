@@ -40,7 +40,7 @@ app.use("/", express.static("./"));
 
 const options: https.ServerOptions = {
     requestCert: true,
-    rejectUnauthorized: false,
+    rejectUnauthorized: true,
     ca: [ fs.readFileSync('client-crt.pem'), fs.readFileSync('client-crt2.pem') ]
 };
 
